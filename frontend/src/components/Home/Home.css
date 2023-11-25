@@ -4,7 +4,7 @@
   
 .header-image {
     width: 100%;
-    max-height: 70%;
+    max-height: 85vh;
 }
   
 .slogan-container {
@@ -19,6 +19,7 @@
 .slogan {
     font-size: 50px;
     margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(150, 150, 150, 0.8);
 }
 
   

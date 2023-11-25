@@ -17,7 +17,6 @@ function SearchPage () {
     */
     return (
         <div>
-            Search Page
             <Filter />
         </div>
     );
