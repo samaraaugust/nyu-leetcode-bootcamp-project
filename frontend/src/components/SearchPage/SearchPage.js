@@ -1,4 +1,56 @@
+import { useState } from "react";
 import Filter from "../Filter/Filter";
+import { exampleJSON } from "../Constants/Constants";
+import Restaurant from "../Restaurant/Restaurant";
+import { Container } from "reactstrap";
+import ReactPaginate from 'react-paginate';
+
+function Items({ currentItems }) {
+    return (
+        <Container>
+            {
+                currentItems.map(item => {
+                    return (
+                        <Restaurant option={item} />
+                    )
+                })
+            }
+        </Container>
+    );
+};
+
+function PaginatedItems({ itemsPerPage }) {
+
+    const [itemOffset, setItemOffset] = useState(0);
+  
+    const endOffset = itemOffset + itemsPerPage;
+    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+    const currentItems = exampleJSON.slice(itemOffset, endOffset);
+    const pageCount = Math.ceil(exampleJSON.length / itemsPerPage);
+  
+    const handlePageClick = (event) => {
+      const newOffset = (event.selected * itemsPerPage) % exampleJSON.length;
+      console.log(
+        `User requested page number ${event.selected}, which is offset ${newOffset}`
+      );
+      setItemOffset(newOffset);
+    };
+  
+    return (
+      <>
+        <Items currentItems={currentItems} />
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel="next >"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={pageCount}
+          previousLabel="< previous"
+          renderOnZeroPageCount={null}
+        />
+      </>
+    );
+}
 
 function SearchPage () {
     /*
@@ -18,6 +70,7 @@ function SearchPage () {
     return (
         <div>
             <Filter />
+            <PaginatedItems itemsPerPage={4} />
         </div>
     );
 };

@@ -16,16 +16,15 @@ import { useState } from "react";
 import {ChevronDown, ChevronUp} from 'feather-icons';
 function Filter () {
     const initialState = {
-        grade_id: '',//
-        grade: [],
-        critical_flag_id: '',//
-        critical_flag: [],
-        score_range: null,
-        building_numbr: '',
-        street_name: '',
-        zip_code: null,
-        borough_id: '',//
-        borough: [],
+        grade: [],//
+        critical_flag: [],//
+        score_range: '',//
+        building_number: '',//
+        street_name: '',//
+        zip_code: '',//
+        borough: [],//
+        restaurant_name: '',//
+        cuisine: []//
     };
     const [filterInfo, setFilterInfo] = useState(initialState);
     const initialOpen = {
@@ -45,37 +44,39 @@ function Filter () {
 
     return (
         <div>
-            <Button onClick={() => console.log("current: ", filterInfo)}>Click</Button>
+
             <Container>
-                
                 <Card>
                     <CardBody>
-                    <h5 style={{ fontWeight: 'normal' }}>
-                    Filter By Restaurant Type
-                </h5>
-                <hr />
+                    <h5 style={{ fontWeight: 'normal', fontSize: 17, marginBottom: '10px'}}>
+                        Filter By Restaurant Type
+                    </h5>
+                    <hr />
                         <Row>
                             <Col>
                         
                                 <Input
-                                    id="restaurantName"
-                                    name="restaurantName"
+                                    id="restaurant_name"
+                                    name="restaurant_name"
                                     placeholder="Search By Name"
                                     type="text"
-                              
+                                    value={filterInfo.restaurant_name}
+                                    onChange={handleChange}
                                 />
                         
                             </Col>
                             <Col>
                                 <Select
-                                    id='cusine'
+                                    id='cuisine'
                                     options={cuisineTypeList}
                                     getOptionLabel={(option) => option['type']}
                                     getOptionValue={(option) => option['type']}
                                     isClearable={true}
                                     menuPosition={'fixed'}
                                     isMulti={true}
-                                    placeholder={'Select a Cusine'}
+                                    placeholder={'Select a Cuisine'}
+                                    value={filterInfo.cuisine}
+                                    onChange={(e) => handleSelectChange(e, 'cuisine')}
                                 />
                             </Col>
                         </Row>
@@ -84,12 +85,13 @@ function Filter () {
             </Container>
 
             <Container>
-                <h5 style={{ fontWeight: 'normal' }}>
+                
+                <Card>
+                    <CardBody>
+                    <h5 style={{ fontWeight: 'normal', fontSize: 17 }}>
                     Filter By Inspection Status
                 </h5>
                 <hr />
-                <Card>
-                    <CardBody>
                         <Row>
                             <Col>
                                 <Select
@@ -121,15 +123,13 @@ function Filter () {
                             </Col>
                             <Col>
                                 <FormGroup>
-                                    <Label for="scoreRange">
-                                    Score Range
-                                    </Label>
                                     <Input
                                         id="score_range"
                                         name="range"
-                                        type="range"
+                                        type="number"
                                         value={filterInfo.score_range}
                                         onChange={handleChange}
+                                        placeholder="Enter a Score"
                                     />
                                 </FormGroup>
                             </Col>
@@ -139,32 +139,39 @@ function Filter () {
             </Container>
 
             <Container>
-                <h5 style={{ fontWeight: 'normal' }}>
+                
+                <Card>
+                    <CardBody>
+                    <h5 style={{ fontWeight: 'normal', fontSize: 17 }}>
                     Filter By Location
                 </h5>
                 <hr />
-                <Card>
-                    <CardBody>
                         <Row>
                             <Col>
                                 <Input
                                     type='number'
-                                    value={filterInfo.building_numbr}
+                                    id='building_number'
+                                    value={filterInfo.building_number}
                                     placeholder="Enter a Building Number"
+                                    onChange={handleChange}
                                 />
                             </Col>
                             <Col>
                                 <Input
                                     type='text'
+                                    id={'street_name'}
                                     value={filterInfo.street_name}
                                     placeholder="Enter a Street Name"
+                                    onChange={handleChange}
                                 />
                             </Col>
                             <Col>
                                 <Input
                                     type='text'
+                                    id={'zip_code'}
                                     value={filterInfo.zip_code}
                                     placeholder="Enter a Zip Code"
+                                    onChange={handleChange}
                                 />
                             </Col>
                             <Col>
@@ -177,6 +184,7 @@ function Filter () {
                                     menuPosition={'fixed'}
                                     isMulti={true}
                                     placeholder={'Select a Borough'}
+                                    onChange={(e) => handleSelectChange(e, 'borough')}
                                 />
                             </Col>
                         </Row>
