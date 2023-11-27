@@ -30,6 +30,16 @@ type Restaurant struct {
 }
 
 type GetRestaurantsRequest struct {
+	Camis              string
+	DBA                string
+	Boro               string
+	Building           string
+	Street             string
+	ZipCode            string
+	CuisineDescription string
+	CriticalFlag       string
+	Score              string
+	Grade              string
 }
 
 type GetRestaurantsResponse struct {
