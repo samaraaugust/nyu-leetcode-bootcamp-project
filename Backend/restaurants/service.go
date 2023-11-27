@@ -9,31 +9,37 @@ import (
 )
 
 func GetRestaurants(w http.ResponseWriter, r *http.Request) {
-	// var userIdInt int
-	// var currentTab string
+	// get filters from URL query parameters
+	camis := r.URL.Query().Get("camis")
+	dba := r.URL.Query().Get("dba")
+	boro := r.URL.Query().Get("boro")
+	building := r.URL.Query().Get("building")
+	street := r.URL.Query().Get("street")
+	zipcode := r.URL.Query().Get("zipcode")
+	cuisine := r.URL.Query().Get("cuisine")
+	criticalFlag := r.URL.Query().Get("criticalFlag")
+	score := r.URL.Query().Get("score")
+	grade := r.URL.Query().Get("grade")
 
-	// userIdStr := r.URL.Query().Get("userId")
-	// if len(userIdStr) == 0 {
-	// 	http.Error(w, "User Id cannot be empty", http.StatusBadRequest)
-	// 	return
-	// }
-	// userIdInt, err := strconv.Atoi(userIdStr)
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusBadRequest)
-	// 	return
-	// }
-	// if userIdInt == 0 {
-	// 	http.Error(w, "User Id cannot be 0", http.StatusBadRequest)
-	// 	return
-	// }
+	// prepare request to filter data
+	req := model.GetRestaurantsRequest{
+		Camis:              camis,
+		DBA:                dba,
+		Boro:               boro,
+		Building:           building,
+		Street:             street,
+		ZipCode:            zipcode,
+		CuisineDescription: cuisine,
+		CriticalFlag:       criticalFlag,
+		Score:              score,
+		Grade:              grade,
+	}
 
-	// currentTab = r.URL.Query().Get("currentTab")
-
-	req := model.GetRestaurantsRequest{}
-
+	// get response data
 	resp := getProductsForTab(req, w)
 
 	w.Header().Set("Content-Type", "application/json")
+
 	json.NewEncoder(w).Encode(resp)
 }
 
@@ -61,13 +67,58 @@ func getProductsForTab(req model.GetRestaurantsRequest, w http.ResponseWriter) m
 		return model.GetRestaurantsResponse{}
 	}
 
+	var restaurantsToReturn []model.Restaurant
+
 	// Display the parsed response
-	fmt.Println("API Response:")
-	for _, restaurant := range restaurants {
-		fmt.Printf("%s\n", restaurant.Boro)
+	for _, r := range restaurants {
+		filtersPassed := true
+
+		if len(req.Camis) > 0 && r.Camis != req.Camis {
+			filtersPassed = false
+		}
+
+		if len(req.DBA) > 0 && r.DBA != req.DBA {
+			filtersPassed = false
+		}
+
+		if len(req.Boro) > 0 && r.Boro != req.Boro {
+			filtersPassed = false
+		}
+
+		if len(req.Building) > 0 && r.Building != req.Building {
+			filtersPassed = false
+		}
+
+		if len(req.Street) > 0 && r.Street != req.Street {
+			filtersPassed = false
+		}
+
+		if len(req.ZipCode) > 0 && r.ZipCode != req.ZipCode {
+			filtersPassed = false
+		}
+
+		if len(req.CuisineDescription) > 0 && r.CuisineDescription != req.CuisineDescription {
+			filtersPassed = false
+		}
+
+		if len(req.CriticalFlag) > 0 && r.CriticalFlag != req.CriticalFlag {
+			filtersPassed = false
+		}
+
+		if len(req.Score) > 0 && r.Score != req.Score {
+			filtersPassed = false
+		}
+
+		if len(req.Grade) > 0 && r.Grade != req.Grade {
+			filtersPassed = false
+		}
+
+		if filtersPassed {
+			restaurantsToReturn = append(restaurantsToReturn, r)
+		}
 	}
 
 	return model.GetRestaurantsResponse{
-		Restaurants: restaurants,
+		Restaurants: restaurantsToReturn,
 	}
 }
