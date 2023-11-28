@@ -15,11 +15,11 @@ function Details() {
         return value ? value : 'N/A';
     };
     return (
-        <div>
+        <div style={{ height: '100vh', marginTop: '20px'}}>
             <Container>
                 <h1 style={{ textAlign: 'center'}}>{restaurant?.dba}</h1>
                 <hr />
-                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: '20px'}}>
                     <Card style={{ minWidth: '100px', width: '500px'}} className="shadow-lg p-3 mb-5 bg-white rounded">
                         <CardTitle tag={'h5'} style={{ textAlign: 'center'}}>
                             Restaurant Information
@@ -29,9 +29,9 @@ function Details() {
                                 <ListGroupItem>
                                     <p><strong>Address:</strong> {valueOrNA(restaurant?.building)} {valueOrNA(restaurant?.street)}, {valueOrNA(restaurant?.boro)} NY {valueOrNA(restaurant?.zipcode)}</p>
                                 </ListGroupItem>
-                                <ListGroupItem>
+                                {/* <ListGroupItem>
                                     <p><strong></strong></p>
-                                </ListGroupItem>
+                                </ListGroupItem> */}
                                 <ListGroupItem>
                                     <p><strong>Phone Number:</strong> {valueOrNA(restaurant?.phone)}</p>
                                 </ListGroupItem>
@@ -45,7 +45,10 @@ function Details() {
                                     <p><strong>Latitude:</strong> {valueOrNA(restaurant?.latitude)}</p>
                                 </ListGroupItem>
                                 <ListGroupItem>
-                                    <p><strong></strong></p>
+                                    <p><strong>Date Record was Created:</strong> {valueOrNA(restaurant?.record_date)}</p>
+                                </ListGroupItem>
+                                <ListGroupItem>
+                                    <p><strong>Community Board:</strong> {valueOrNA(restaurant?.latitude)}</p>
                                 </ListGroupItem>
                             </ListGroup>
                         </CardBody>
@@ -61,6 +64,9 @@ function Details() {
                                 </ListGroupItem>
                                 <ListGroupItem>
                                     <p><strong>Grade:</strong> {valueOrNA(restaurant.grade)}</p>
+                                </ListGroupItem>
+                                <ListGroupItem>
+                                    <p><strong>Date Grade Was Assigned:</strong> {valueOrNA(restaurant.grade_date)}</p>
                                 </ListGroupItem>
                                 <ListGroupItem>
                                     <p><strong>Score:</strong> {valueOrNA(restaurant.score)}</p>

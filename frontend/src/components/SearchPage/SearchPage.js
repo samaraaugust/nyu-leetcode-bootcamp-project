@@ -4,6 +4,8 @@ import { exampleJSON } from "../Constants/Constants";
 import Restaurant from "../Restaurant/Restaurant";
 import { Container } from "reactstrap";
 import ReactPaginate from 'react-paginate';
+import "./SearchPage.css";
+import { ChevronLeft, ChevronRight } from 'feather-icons';
 
 function Items({ currentItems }) {
     return (
@@ -37,18 +39,23 @@ function PaginatedItems({ itemsPerPage }) {
     };
   
     return (
-      <>
+      <div className="SearchContainer">
         <Items currentItems={currentItems} />
         <ReactPaginate
           breakLabel="..."
-          nextLabel="next >"
+          nextLabel={"Next"}
           onPageChange={handlePageClick}
           pageRangeDisplayed={5}
           pageCount={pageCount}
-          previousLabel="< previous"
+          previousLabel={'Previous'}
           renderOnZeroPageCount={null}
+          activeClassName={"paginationActive"}
+          containerClassName={"paginationBttns"}
+          previousLinkClassName={"previousBttn"}
+          nextLinkClassName={"nextBttn"}
+          disabledClassName={"paginationDisabled"}
         />
-      </>
+      </div>
     );
 }
 

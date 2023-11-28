@@ -8,18 +8,20 @@ import Restaurant from "../Restaurant/Restaurant";
 import Details from "../Details/Details";
 function App() {
   return (
-    <Router>
-      <Layout>
-        <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route path="/policy" element={<Policy />} />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="/restaurant" element={<Details />} />
-            {/* <Route path="/contact" component={Contact} /> */}
-            {/* Additional routes for other pages */}
-        </Routes>
-      </Layout>
-    </Router> 
+    <div style={{ minHeight: '100vh', position: 'relative', paddingBottom: '80px', boxSizing: 'border-box'}}>
+      <Router>
+        <Layout>
+          <Routes>
+              <Route exact path="/" element={<Home />} />
+              <Route path="/policy" element={<Policy />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="/restaurant" element={<Details />} />
+              {/* <Route path="/contact" component={Contact} /> */}
+              {/* Additional routes for other pages */}
+          </Routes>
+        </Layout>
+      </Router> 
+    </div>
   );
 }
 

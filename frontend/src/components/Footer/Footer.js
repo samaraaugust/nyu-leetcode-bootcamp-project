@@ -3,7 +3,7 @@ import { Container, Row, Col } from 'reactstrap';
 
 function Footer() {
     return (
-        <footer style={{ backgroundColor: '#212529', padding: '20px' }}>
+        <footer style={{ position: 'absolute', bottom: 0, height: '80px', backgroundColor: '#212529', padding: '20px', width: '100%' }}>
           <Container>
             <Row>
               <Col style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', color: 'white'}}>
