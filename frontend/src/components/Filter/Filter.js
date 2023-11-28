@@ -18,24 +18,13 @@ import {
 import Select from 'react-select';
 import { criticalTypeFlagList, gradeTypeList, boroTypeList, cuisineTypeList } from "../Constants/Constants";
 import { useState } from "react";
+import { useFilter, initialState } from "../FilterContext/FilterContext";
 import {ChevronDown, ChevronUp} from 'feather-icons';
 function Filter () {
-    const initialState = {
-        grade: [],//
-        critical_flag: [],//
-        score_range: '',//
-        building_number: '',//
-        street_name: '',//
-        zip_code: '',//
-        borough: [],//
-        restaurant_name: '',//
-        cuisine: []//
-    };
     const [filterInfo, setFilterInfo] = useState(initialState);
-    const initialOpen = {
-        inspection: true,
-    };
     const [modal, setModal] = useState(false);
+
+    const { updateFilter } = useFilter();
 
     const handleSelectChange = (e, type) => {
         console.log("e: ", e);
@@ -49,8 +38,16 @@ function Filter () {
 
     const toggle = () => setModal(!modal);
 
+    const handleSubmit = () => {
+        updateFilter(filterInfo);
+        if (modal) {
+            toggle();
+        }
+    };
+
     return (
         <div style={{ margin: '20px 0px' }}>
+            <Button onClick={() => console.log(filterInfo)}>Click</Button>
             <Container>
                 <Card>
                     <CardBody style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
@@ -61,17 +58,17 @@ function Filter () {
                         <Row >
                             <Col>
                                 <Input
-                                    id="restaurant_name"
+                                    id="dba"
                                     name="restaurant_name"
                                     placeholder="Enter a Value"
                                     type="text"
-                                    value={filterInfo.restaurant_name}
+                                    value={filterInfo.dba}
                                     onChange={handleChange}
                                     style={{ minWidth: '200px', width: '700px'}}
                                 />
                             </Col>
                             <Col>
-                                <Button>Submit</Button>
+                                <Button onClick={handleSubmit}>Submit</Button>
                             </Col>
                         </Row>
                         <Button style={{ margin: '10px 0px'}} onClick={toggle}>Advanced Filter Options</Button>
@@ -94,11 +91,11 @@ function Filter () {
                                                 Restaurant
                                             </Label>
                                             <Input
-                                                id="restaurant_name"
+                                                id="dba"
                                                 name="restaurant_name"
                                                 placeholder="Search By Name"
                                                 type="text"
-                                                value={filterInfo.restaurant_name}
+                                                value={filterInfo.dba}
                                                 onChange={handleChange}
                                             />
             
@@ -155,15 +152,15 @@ function Filter () {
                                                 Critical Flag
                                             </Label>
                                             <Select
-                                                id='critical_flag'
+                                                id='criticalFlag'
                                                 options={criticalTypeFlagList}
                                                 getOptionLabel={(option) => option['type']}
                                                 getOptionValue={(option) => option['type']}
                                                 isClearable={true}
                                                 menuPosition={'fixed'}
                                                 isMulti={true}
-                                                value={filterInfo.critical_flag}
-                                                onChange={(e) => handleSelectChange(e, 'critical_flag')}
+                                                value={filterInfo.criticalFlag}
+                                                onChange={(e) => handleSelectChange(e, 'criticalFlag')}
                                                 placeholder={'Select a Critical Flag'}
                                             />
                                         </Col>
@@ -172,10 +169,10 @@ function Filter () {
                                                 Score
                                             </Label>
                                             <Input
-                                                id="score_range"
+                                                id="score"
                                                 name="range"
                                                 type="number"
-                                                value={filterInfo.score_range}
+                                                value={filterInfo.score}
                                                 onChange={handleChange}
                                                 placeholder="Enter a Score"
                                             />
@@ -198,8 +195,8 @@ function Filter () {
                                             </Label>
                                             <Input
                                                 type='number'
-                                                id='building_number'
-                                                value={filterInfo.building_number}
+                                                id='building'
+                                                value={filterInfo.building}
                                                 placeholder="Enter a Value"
                                                 onChange={handleChange}
                                             />
@@ -210,8 +207,8 @@ function Filter () {
                                             </Label>
                                             <Input
                                                 type='text'
-                                                id={'street_name'}
-                                                value={filterInfo.street_name}
+                                                id={'street'}
+                                                value={filterInfo.street}
                                                 placeholder="Enter a Value"
                                                 onChange={handleChange}
                                             />
@@ -224,8 +221,8 @@ function Filter () {
                                             </Label>
                                             <Input
                                                 type='text'
-                                                id={'zip_code'}
-                                                value={filterInfo.zip_code}
+                                                id={'zipcode'}
+                                                value={filterInfo.zipcode}
                                                 placeholder="Enter a Value"
                                                 onChange={handleChange}
                                             />
@@ -243,7 +240,7 @@ function Filter () {
                                                 menuPosition={'fixed'}
                                                 isMulti={true}
                                                 placeholder={'Select a Value'}
-                                                onChange={(e) => handleSelectChange(e, 'borough')}
+                                                onChange={(e) => handleSelectChange(e, 'boro')}
                                             />
                                         </Col>
                                     </Row>
@@ -252,7 +249,7 @@ function Filter () {
                         </div>
                     </ModalBody>
                     <ModalFooter style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-                        <Button color="primary" onClick={toggle}>
+                        <Button color="primary" onClick={handleSubmit}>
                             Search
                         </Button>
                         <Button color="secondary" onClick={toggle}>
