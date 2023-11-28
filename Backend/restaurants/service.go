@@ -6,9 +6,21 @@ import (
 	"io/ioutil"
 	"net/http"
 	"project/model"
+	"strings"
 )
 
 func GetRestaurants(w http.ResponseWriter, r *http.Request) {
+	// get request data
+	req := getRequestData(r)
+
+	// get response data
+	resp := getProductsForTab(req, w)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(resp)
+}
+
+func getRequestData(r *http.Request) (req model.GetRestaurantsRequest) {
 	// get filters from URL query parameters
 	camis := r.URL.Query().Get("camis")
 	dba := r.URL.Query().Get("dba")
@@ -21,26 +33,57 @@ func GetRestaurants(w http.ResponseWriter, r *http.Request) {
 	score := r.URL.Query().Get("score")
 	grade := r.URL.Query().Get("grade")
 
-	// prepare request to filter data
-	req := model.GetRestaurantsRequest{
-		Camis:              camis,
-		DBA:                dba,
-		Boro:               boro,
-		Building:           building,
-		Street:             street,
-		ZipCode:            zipcode,
-		CuisineDescription: cuisine,
-		CriticalFlag:       criticalFlag,
-		Score:              score,
-		Grade:              grade,
+	// generate grades map
+	gradesArray := strings.Split(grade, ",")
+	gradesMap := make(map[string]bool)
+	for _, g := range gradesArray {
+		if len(g) > 0 {
+			gradesMap[g] = true
+		}
 	}
 
-	// get response data
-	resp := getProductsForTab(req, w)
+	// generate criticalFlag map
+	criticalFlagArray := strings.Split(criticalFlag, ",")
+	criticalFlagMap := make(map[string]bool)
+	for _, c := range criticalFlagArray {
+		if len(c) > 0 {
+			criticalFlagMap[c] = true
+		}
+	}
 
-	w.Header().Set("Content-Type", "application/json")
+	// generate boro map
+	boroArray := strings.Split(boro, ",")
+	boroMap := make(map[string]bool)
+	for _, b := range boroArray {
+		if len(b) > 0 {
+			boroMap[b] = true
+		}
+	}
 
-	json.NewEncoder(w).Encode(resp)
+	// generate cuisine map
+	cuisineArray := strings.Split(cuisine, ",")
+	cuisineMap := make(map[string]bool)
+	for _, c := range cuisineArray {
+		if len(c) > 0 {
+			cuisineMap[c] = true
+		}
+	}
+
+	// prepare request to filter data
+	req = model.GetRestaurantsRequest{
+		Camis:           camis,
+		DBA:             dba,
+		BoroMap:         boroMap,
+		Building:        building,
+		Street:          street,
+		ZipCode:         zipcode,
+		CuisineMap:      cuisineMap,
+		CriticalFlagMap: criticalFlagMap,
+		Score:           score,
+		GradesMap:       gradesMap,
+	}
+
+	return
 }
 
 func getProductsForTab(req model.GetRestaurantsRequest, w http.ResponseWriter) model.GetRestaurantsResponse {
@@ -81,7 +124,7 @@ func getProductsForTab(req model.GetRestaurantsRequest, w http.ResponseWriter) m
 			filtersPassed = false
 		}
 
-		if len(req.Boro) > 0 && r.Boro != req.Boro {
+		if len(req.BoroMap) > 0 && !req.BoroMap[r.Boro] {
 			filtersPassed = false
 		}
 
@@ -97,11 +140,11 @@ func getProductsForTab(req model.GetRestaurantsRequest, w http.ResponseWriter) m
 			filtersPassed = false
 		}
 
-		if len(req.CuisineDescription) > 0 && r.CuisineDescription != req.CuisineDescription {
+		if len(req.CuisineMap) > 0 && !req.CuisineMap[r.CuisineDescription] {
 			filtersPassed = false
 		}
 
-		if len(req.CriticalFlag) > 0 && r.CriticalFlag != req.CriticalFlag {
+		if len(req.CriticalFlagMap) > 0 && !req.CriticalFlagMap[r.CriticalFlag] {
 			filtersPassed = false
 		}
 
@@ -109,7 +152,7 @@ func getProductsForTab(req model.GetRestaurantsRequest, w http.ResponseWriter) m
 			filtersPassed = false
 		}
 
-		if len(req.Grade) > 0 && r.Grade != req.Grade {
+		if len(req.GradesMap) > 0 && !req.GradesMap[r.Grade] {
 			filtersPassed = false
 		}
 

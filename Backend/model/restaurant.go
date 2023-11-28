@@ -30,16 +30,16 @@ type Restaurant struct {
 }
 
 type GetRestaurantsRequest struct {
-	Camis              string
-	DBA                string
-	Boro               string
-	Building           string
-	Street             string
-	ZipCode            string
-	CuisineDescription string
-	CriticalFlag       string
-	Score              string
-	Grade              string
+	Camis           string
+	DBA             string
+	BoroMap         map[string]bool
+	Building        string
+	Street          string
+	ZipCode         string
+	CuisineMap      map[string]bool
+	CriticalFlagMap map[string]bool
+	Score           string
+	GradesMap       map[string]bool
 }
 
 type GetRestaurantsResponse struct {
