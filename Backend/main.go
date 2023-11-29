@@ -1,19 +1,25 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"net/http"
+    "fmt"
+    "log"
+    "net/http"
 
-	"project/restaurants"
+    "github.com/gorilla/mux"
+    "github.com/rs/cors"
+    "project/restaurants"
 )
 
 func main() {
-	// GET API endpoint to fetch restaurants data
-	http.HandleFunc("/restaurants", func(w http.ResponseWriter, r *http.Request) {
-		restaurants.GetRestaurants(w, r)
-	})
+    router := mux.NewRouter()
 
-	fmt.Println("Server is running on http://localhost:8000")
-	log.Fatal(http.ListenAndServe(":8000", nil))
+    router.HandleFunc("/restaurants", func(w http.ResponseWriter, r *http.Request) {
+        restaurants.GetRestaurants(w, r)
+    })
+
+    handler := cors.Default().Handler(router)
+
+    port := 8000
+    fmt.Printf("Server is running on :%d...\n", port)
+    log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), handler))
 }

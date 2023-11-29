@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from "../Home/Home";
 import Policy from "../Policy/Policy";
 import SearchPage from "../SearchPage/SearchPage";
-import Restaurant from "../Restaurant/Restaurant";
 import Details from "../Details/Details";
 import { DataProvider  } from "../FilterContext/FilterContext";
 function App() {
@@ -17,9 +16,7 @@ function App() {
                 <Route exact path="/" element={<Home />} />
                 <Route path="/policy" element={<Policy />} />
                 <Route path="/search" element={<SearchPage />} />
-                <Route path="/restaurant" element={<Details />} />
-                {/* <Route path="/contact" component={Contact} /> */}
-                {/* Additional routes for other pages */}
+                <Route path="/restaurant/:param" element={<Details />} />
             </Routes>
           </Layout>
         </Router> 

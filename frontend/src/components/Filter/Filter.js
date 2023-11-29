@@ -13,21 +13,20 @@ import {
     Modal, 
     ModalHeader, 
     ModalBody, 
-    ModalFooter
+    ModalFooter,
+    Badge
  } from "reactstrap";
 import Select from 'react-select';
 import { criticalTypeFlagList, gradeTypeList, boroTypeList, cuisineTypeList } from "../Constants/Constants";
 import { useState } from "react";
 import { useFilter, initialState } from "../FilterContext/FilterContext";
-import {ChevronDown, ChevronUp} from 'feather-icons';
 function Filter () {
     const [filterInfo, setFilterInfo] = useState(initialState);
     const [modal, setModal] = useState(false);
 
-    const { updateFilter } = useFilter();
+    const { currentFilter, updateFilter } = useFilter();
 
     const handleSelectChange = (e, type) => {
-        console.log("e: ", e);
         setFilterInfo({...filterInfo, [type]: e});
     };
 
@@ -45,17 +44,28 @@ function Filter () {
         }
     };
 
+    const reset = () => {
+        setFilterInfo(initialState);
+        updateFilter(initialState);
+    };
+
     return (
         <div style={{ margin: '20px 0px' }}>
-            <Button onClick={() => console.log(filterInfo)}>Click</Button>
+            {/* <Button onClick={() => console.log(filterInfo)}>Click</Button> */}
             <Container>
-                <Card>
+                <Card className="shadow-lg p-3 mb-5 bg-#e8eff9 rounded">
                     <CardBody style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+                    <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                            <Button outline onClick={reset}>Reset Filter</Button>
+                            <Button outline onClick={toggle}>Advanced Filter Options</Button>
+                        </div>
                         <CardTitle style={{ textAlign: 'center'}} tag={'h4'}>
                             Search By Restaurant Name
                         </CardTitle>
                         <hr style={{ width: '100%'}}/>
                         <Row >
+                            {/* --bs-focus-ring-color rgba(13, 110, 253, 0.25)*/}
+                            {/* 0 1rem 3rem #e8eff9 */}
                             <Col>
                                 <Input
                                     id="dba"
@@ -68,10 +78,9 @@ function Filter () {
                                 />
                             </Col>
                             <Col>
-                                <Button onClick={handleSubmit}>Submit</Button>
+                                <Button outline onClick={handleSubmit}>Search</Button>
                             </Col>
                         </Row>
-                        <Button style={{ margin: '10px 0px'}} onClick={toggle}>Advanced Filter Options</Button>
                     </CardBody>
                 </Card>
             </Container>
@@ -83,7 +92,7 @@ function Filter () {
                             <h5 style={{ fontWeight: 'normal', fontSize: 17, textAlign: 'center', marginBottom: '20px'}}>
                                 Filter By Restaurant Type
                             </h5>
-                            <Card>
+                            <Card className="shadow p-3 mb-3 bg-white rounded">
                                 <CardBody>
                                     <Row>
                                         <Col>
@@ -121,13 +130,13 @@ function Filter () {
                                 </CardBody>
                             </Card>
                         </div>
-                        <div style={{ height: '20px'}} />
+                        <div style={{ height: '10px'}} />
                         <div>
                             <h5 style={{ fontWeight: 'normal', fontSize: 17, textAlign: 'center', marginBottom: '20px' }}>
                                 Filter By Inspection Status
                             </h5>
     
-                            <Card>
+                            <Card className="shadow p-3 mb-3 bg-white rounded">
                                 <CardBody>
                                     <Row>
                                         <Col>
@@ -181,12 +190,12 @@ function Filter () {
                                 </CardBody>
                             </Card>
                         </div>
-                        <div style={{ height: '20px'}} />
+                        <div style={{ height: '10px'}} />
                         <div>
                             <h5 style={{ fontWeight: 'normal', fontSize: 17, textAlign: 'center', marginBottom: '20px' }}>
                                 Filter By Location
                             </h5>
-                            <Card>
+                            <Card className="shadow p-3 mb-3 bg-white rounded">
                                 <CardBody>
                                     <Row>
                                         <Col>
@@ -239,6 +248,7 @@ function Filter () {
                                                 isClearable={true}
                                                 menuPosition={'fixed'}
                                                 isMulti={true}
+                                                value={filterInfo.boro}
                                                 placeholder={'Select a Value'}
                                                 onChange={(e) => handleSelectChange(e, 'boro')}
                                             />
@@ -259,165 +269,6 @@ function Filter () {
                 </Modal>
             </div>
             
-            {/* <Container>
-                <Card>
-                    <CardBody>
-                    <h5 style={{ fontWeight: 'normal', fontSize: 17}}>
-                        Filter By Restaurant Type
-                    </h5>
-                    <hr />
-                        <Row>
-                            <Col>
-                                <Label>
-                                    Restaurant
-                                </Label>
-                                <Input
-                                    id="restaurant_name"
-                                    name="restaurant_name"
-                                    placeholder="Search By Name"
-                                    type="text"
-                                    value={filterInfo.restaurant_name}
-                                    onChange={handleChange}
-                                />
-                        
-                            </Col>
-                            <Col>
-                                <Select
-                                    id='cuisine'
-                                    options={cuisineTypeList}
-                                    getOptionLabel={(option) => option['type']}
-                                    getOptionValue={(option) => option['type']}
-                                    isClearable={true}
-                                    menuPosition={'fixed'}
-                                    isMulti={true}
-                                    placeholder={'Select a Cuisine'}
-                                    value={filterInfo.cuisine}
-                                    onChange={(e) => handleSelectChange(e, 'cuisine')}
-                                />
-                            </Col>
-                        </Row>
-                    </CardBody>
-                </Card>
-            </Container>
-
-            <Container>
-                
-                <Card>
-                    <CardBody>
-                    <h5 style={{ fontWeight: 'normal', fontSize: 17 }}>
-                    Filter By Inspection Status
-                </h5>
-                <hr />
-                        <Row>
-                            <Col>
-                                <Select
-                                    id='grade'
-                                    options={gradeTypeList}
-                                    getOptionLabel={(option) => option['type']}
-                                    getOptionValue={(option) => option['type']}
-                                    isClearable={true}
-                                    menuPosition={'fixed'}
-                                    isMulti={true}
-                                    value={filterInfo.grade}
-                                    onChange={(e) => handleSelectChange(e, 'grade')}
-                                    placeholder={'Select a Inspection Grade'}
-                                />
-                            </Col>
-                            <Col>
-                                <Select
-                                    id='critical_flag'
-                                    options={criticalTypeFlagList}
-                                    getOptionLabel={(option) => option['type']}
-                                    getOptionValue={(option) => option['type']}
-                                    isClearable={true}
-                                    menuPosition={'fixed'}
-                                    isMulti={true}
-                                    value={filterInfo.critical_flag}
-                                    onChange={(e) => handleSelectChange(e, 'critical_flag')}
-                                    placeholder={'Select a Critical Flag'}
-                                />
-                            </Col>
-                            <Col>
-                                <FormGroup>
-                                    <Input
-                                        id="score_range"
-                                        name="range"
-                                        type="number"
-                                        value={filterInfo.score_range}
-                                        onChange={handleChange}
-                                        placeholder="Enter a Score"
-                                    />
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                    </CardBody>
-                </Card>
-            </Container>
-
-            <Container>
-                
-                <Card>
-                    <CardBody>
-                    <h5 style={{ fontWeight: 'normal', fontSize: 17 }}>
-                    Filter By Location
-                </h5>
-                <hr />
-                        <Row>
-                            <Col>
-                                <Input
-                                    type='number'
-                                    id='building_number'
-                                    value={filterInfo.building_number}
-                                    placeholder="Enter a Building Number"
-                                    onChange={handleChange}
-                                />
-                            </Col>
-                            <Col>
-                                <Input
-                                    type='text'
-                                    id={'street_name'}
-                                    value={filterInfo.street_name}
-                                    placeholder="Enter a Street Name"
-                                    onChange={handleChange}
-                                />
-                            </Col>
-                            <Col>
-                                <Input
-                                    type='text'
-                                    id={'zip_code'}
-                                    value={filterInfo.zip_code}
-                                    placeholder="Enter a Zip Code"
-                                    onChange={handleChange}
-                                />
-                            </Col>
-                            <Col>
-                                <Select
-                                    id='boro'
-                                    options={boroTypeList}
-                                    getOptionLabel={(option) => option['type']}
-                                    getOptionValue={(option) => option['type']}
-                                    isClearable={true}
-                                    menuPosition={'fixed'}
-                                    isMulti={true}
-                                    placeholder={'Select a Borough'}
-                                    onChange={(e) => handleSelectChange(e, 'borough')}
-                                />
-                            </Col>
-                        </Row>
-                    </CardBody>
-                </Card>
-            </Container> */}
-
-            {/* <Button 
-                style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        width: '100%',
-                        justifyContent: "space-between",
-                    }} color={'light'} name=''>
-                            Service Address {isOpen.service ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                    </Button>
-                    <Collapse isOpen={isOpen.service} style={{ width: '100%' }}></Collapse> */}
         </div>
     );
 };

@@ -29,6 +29,5 @@ export const DataProvider = ({ children }) => {
 
 export const useFilter = () => {
     const { currentFilter, updateFilter } = useContext(DataContext);
-    console.log("currentFilet: ", currentFilter);
     return { currentFilter, updateFilter };
 }

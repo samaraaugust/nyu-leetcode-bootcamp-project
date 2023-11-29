@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Filter from "../Filter/Filter";
 import { exampleJSON } from "../Constants/Constants";
 import Restaurant from "../Restaurant/Restaurant";
-import { Container } from "reactstrap";
+import { Container, Spinner } from "reactstrap";
 import ReactPaginate from 'react-paginate';
 import "./SearchPage.css";
 import { useFilter } from "../FilterContext/FilterContext";
@@ -11,6 +11,7 @@ function Items({ currentItems }) {
     return (
         <Container>
             {
+                currentItems.length === 0 ?  <h5 style={{textAlign: 'center'}}>No matching items. Please try adjusting your filters or search criteria.</h5>:
                 currentItems.map(item => {
                     return (
                         <Restaurant option={item} />
@@ -23,71 +24,88 @@ function Items({ currentItems }) {
 
 function PaginatedItems({ itemsPerPage }) {
     const [itemOffset, setItemOffset] = useState(0);
-
+    const [items, setItems] = useState([]);
     const { currentFilter } = useFilter();
-
+    const [error, setError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const isNullOrEmpty = (value) => {
         return value === null || value === undefined || (Array.isArray(value) && value.length === 0) || value === '';
     };
 
-    /*
-    camis := r.URL.Query().Get("camis")
-	dba := r.URL.Query().Get("dba")
-	boro := r.URL.Query().Get("boro")
-	building := r.URL.Query().Get("building")
-	street := r.URL.Query().Get("street")
-	zipcode := r.URL.Query().Get("zipcode")
-	cuisine := r.URL.Query().Get("cuisine")
-	criticalFlag := r.URL.Query().Get("criticalFlag")
-	score := r.URL.Query().Get("score")
-	grade := r.URL.Query().Get("grade")
-    */
     useEffect(() => {
         console.log("Changed currentFi: ", currentFilter);
         const getNewData = async (filter) => {
-            let apiString = "";
-            let apiParams = [];
-            let response;
-            for (const key in filter) {
-                if (isNullOrEmpty(filter[key])) {
-                    continue;
-                } else {
-                    if (Array.isArray(filter[key])) {
-                        const arrValues = filter[key].map(item => item.type);
-                        const commaStr = arrValues.join(',');
-                        apiParams.push(`${key}=`.concat(commaStr));
+            setIsLoading(true);
+            try {
+                let apiString = "";
+                let apiParams = [];
+                let response;
+                for (const key in filter) {
+                    if (isNullOrEmpty(filter[key])) {
+                        continue;
                     } else {
-                        apiParams.push(`${key}=`.concat(filter[key]));
+                        if (Array.isArray(filter[key])) {
+                            const arrValues = filter[key].map(item => item.type);
+                            const commaStr = arrValues.join(',');
+                            apiParams.push(`${key}=`.concat(commaStr));
+                        } else {
+                            apiParams.push(`${key}=`.concat(filter[key]));
+                        }
                     }
                 }
+                apiString = apiParams.join('&');
+                const baseUrl = 'http://localhost:8000/restaurants';
+                if (!apiParams.length) {
+                    response = await axios.get(baseUrl);
+                    if (response.status === 200) {
+                        if (response?.data?.Restaurants !== null) {
+                            setItems([...response?.data?.Restaurants]);
+                        } else {
+                            setItems([]);
+                        }
+                        
+                    }
+                    console.log("res: ", response);
+                } else {
+                    let newString = baseUrl.concat("?");
+                    console.log("apiString: ", newString.concat(apiString));
+                    response = await axios.get(newString.concat(apiString));
+                    if (response.status === 200) {
+                        if (response?.data?.Restaurants !== null) {
+                            setItems([...response?.data?.Restaurants]);
+                        } else {
+                            setItems([]);
+                        }
+                    }
+                    console.log("res: ", response);
+                }
+                
+            } catch (err) {
+                setItems([]);
+                console.log("error: ", err);
             }
-            apiString = apiParams.join('&');
-            const baseUrl = 'http://localhost:8000/restaurants';
-            if (!apiParams.length) {
-                response = await axios.get(baseUrl);
-                console.log("res: ", response);
-            }
+            setItemOffset(0);
+            setIsLoading(false);
         };
+    
         getNewData(currentFilter);
     }, [currentFilter]);
 
   
     const endOffset = itemOffset + itemsPerPage;
-    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-    const currentItems = exampleJSON.slice(itemOffset, endOffset);
-    const pageCount = Math.ceil(exampleJSON.length / itemsPerPage);
+    const currentItems = items.slice(itemOffset, endOffset);
+    const pageCount = Math.ceil(items.length / itemsPerPage);
   
     const handlePageClick = (event) => {
-      const newOffset = (event.selected * itemsPerPage) % exampleJSON.length;
-      console.log(
-        `User requested page number ${event.selected}, which is offset ${newOffset}`
-      );
+      const newOffset = (event.selected * itemsPerPage) % items.length;
       setItemOffset(newOffset);
     };
   
     return (
       <div className="SearchContainer">
-        <Items currentItems={currentItems} />
+        {isLoading ? 
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}><Spinner>Loading</Spinner></div>
+        : <><Items currentItems={currentItems} />
         <ReactPaginate
           breakLabel="..."
           nextLabel={"Next"}
@@ -101,7 +119,7 @@ function PaginatedItems({ itemsPerPage }) {
           previousLinkClassName={"previousBttn"}
           nextLinkClassName={"nextBttn"}
           disabledClassName={"paginationDisabled"}
-        />
+        /></>}
       </div>
     );
 }

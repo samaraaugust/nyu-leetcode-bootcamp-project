@@ -23,7 +23,7 @@ function Restaurant ({ option }) {
                             Restaurant Name
                         </Label>
                         <p>
-                            {valueOrNA(option?.dba)}
+                            {valueOrNA(option?.DBA)}
                         </p>
                     </Col>
                     <Col xs='3'>
@@ -31,7 +31,7 @@ function Restaurant ({ option }) {
                             Address
                         </Label>
                         <p>
-                            {valueOrNA(option?.building)} {valueOrNA(option?.street)}, {valueOrNA(option?.boro)} NY {valueOrNA(option?.zipcode)}
+                            {valueOrNA(option?.Building)} {valueOrNA(option?.Street)}, {valueOrNA(option?.Boro)} NY {valueOrNA(option?.ZipCode)}
                         </p>
                     </Col>
                     <Col xs='2'>
@@ -39,7 +39,7 @@ function Restaurant ({ option }) {
                             Cuisine
                         </Label>
                         <p>
-                            {valueOrNA(option?.cuisine_description)}
+                            {valueOrNA(option?.CuisineDescription)}
                         </p>
                     </Col>
                     <Col xs='1'>
@@ -47,7 +47,7 @@ function Restaurant ({ option }) {
                             Grade
                         </Label>
                         <p>
-                            {valueOrNA(option?.grade)}
+                            {valueOrNA(option?.Grade)}
                         </p>
                     </Col>
                     <Col xs='1'>
@@ -55,11 +55,11 @@ function Restaurant ({ option }) {
                             Score
                         </Label>
                         <p>
-                            {valueOrNA(option?.score)}
+                            {valueOrNA(option?.Score)}
                         </p>
                     </Col>
                     <Col xs='2'>
-                        <Link to='/restaurant'><Button>
+                        <Link to={`/restaurant/${option?.Camis}`}><Button>
                             Read More
                         </Button></Link>
                     </Col>

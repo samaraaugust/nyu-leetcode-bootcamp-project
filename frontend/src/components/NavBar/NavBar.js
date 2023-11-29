@@ -24,7 +24,7 @@ function NavBar () {
         <div>
           <Navbar className="navbar navbar-expand-lg" color="dark">
             <NavbarBrand href="/" style={{ color: 'white' }}>NYC Inspection Results</NavbarBrand>
-            <NavbarToggler onClick={toggle} />
+            <NavbarToggler onClick={toggle} style={{ backgroundColor: 'white' }}/>
             <Collapse isOpen={isOpen} navbar>
               <Nav className="ms-auto" navbar>
                 <NavItem>
