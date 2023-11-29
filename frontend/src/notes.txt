@@ -1,0 +1,9 @@
+Restaurant Health Rating: Display health inspection ratings for NYC restaurants with search and alert features.
+Food Safety Education Platform: Educate on food safety practices
+Pages Needed:
+- nav bar
+- search Page
+    - search by rating, location, restaruant name, crusine
+- policy Page (Samantha)
+- individual page for restaurants
+- alert page

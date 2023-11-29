@@ -1,0 +1,40 @@
+.SearchContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+.paginationBttns {
+    width: 100%;
+    height: 40px;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 30px;
+}
+
+.paginationBttns a {
+    padding: 10px;
+    margin: 8px;
+    border-radius: 5px;
+    border: 1px solid #6c757d;
+    color: #6c757d;
+    cursor: pointer;
+    background-color:#fff;
+}
+
+.paginationBttns a:hover {
+    background-color: #6c757d;
+    color: #fff !important;
+    border: 1px solid #6c757d;
+}
+
+.paginationActive a {
+    background-color: #6c757d;
+    color: #fff !important;
+    border: 1px solid #6c757d;
+    border-radius: 6px;
+}
